@@ -8,26 +8,16 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f4f4f4;
         }
         .container {
             max-width: 800px;
-            margin: 20px auto;
+            margin: 0 auto;
             padding: 20px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2 {
-            color: #333;
-            text-align: center;
-        }
-        /* Login Form Styles */
-        .login-form {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
         }
         .form-group {
             margin-bottom: 15px;
@@ -35,40 +25,59 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
         }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            box-sizing: border-box;
-        }
-        /* Dashboard Styles */
-        .dashboard-menu {
-            display: grid;
-            gap: 10px;
-            margin: 20px 0;
         }
         .menu-item {
-            background-color: #007bff;
+            background: #007bff;
             color: white;
-            padding: 15px;
+            padding: 10px;
+            margin: 5px 0;
             border-radius: 4px;
-            text-decoration: none;
-            text-align: center;
             cursor: pointer;
+            text-align: center;
         }
         .menu-item:hover {
-            background-color: #0056b3;
+            background: #0056b3;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .table th {
+            background-color: #f5f5f5;
+        }
+        .button {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .back-button {
+            background: #6c757d;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin: 10px 0;
         }
         .logout {
-            background-color: #dc3545;
+            background: #dc3545;
         }
-        .logout:hover {
-            background-color: #c82333;
-        }
-        /* Profile Styles */
         .profile-card {
             background: #f8f9fa;
             padding: 20px;
@@ -81,101 +90,46 @@
             border-left: 4px solid #007bff;
             background: white;
         }
-        /* Bus Pass Booking Styles */
-        .routes-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        .routes-table th, .routes-table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        .routes-table th {
-            background-color: #f5f5f5;
-        }
-        .booking-form {
-            display: none;
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            margin: 5px 0;
-        }
-        .button:hover {
-            background-color: #218838;
-        }
-        .back-button {
-            background-color: #6c757d;
-        }
-        .cancel-button {
-            background-color: #dc3545;
-        }
-        /* Error Message */
-        .error-message {
-            color: #dc3545;
-            text-align: center;
-            margin: 10px 0;
-        }
-        /* Hide all sections initially */
-        #loginSection, #studentDashboard, #operatorDashboard, #adminDashboard, 
-        #profileSection, #busPassSection {
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <!-- Login Section -->
+    <!-- Login Form -->
     <div id="loginSection" class="container">
-        <div class="login-form">
-            <h2>Login</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required>
-                </div>
-                <div id="errorMessage" class="error-message"></div>
-                <button type="submit" class="button">Login</button>
-            </form>
-        </div>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div id="loginError" class="error"></div>
+            <button type="submit" class="button">Login</button>
+        </form>
     </div>
 
     <!-- Student Dashboard -->
-    <div id="studentDashboard" class="container">
+    <div id="studentDashboard" class="container" style="display: none;">
         <h2>Student Dashboard</h2>
-        <div class="dashboard-menu">
-            <div class="menu-item" onclick="showSection('profileSection')">My Profile</div>
-            <div class="menu-item" onclick="showSection('busPassSection')">Book Bus Pass</div>
-            <div class="menu-item" onclick="showLiveLocation()">Live Location</div>
-            <div class="menu-item" onclick="viewBookedPass()">View Booked Pass</div>
-            <div class="menu-item logout" onclick="logout()">Logout</div>
-        </div>
+        <div class="menu-item" onclick="showStudentProfile()">My Profile</div>
+        <div class="menu-item" onclick="showBusPassBooking()">Book Bus Pass</div>
+        <div class="menu-item" onclick="showLiveLocation()">Live Location</div>
+        <div class="menu-item" onclick="showBookedPass()">View Booked Pass</div>
+        <div class="menu-item logout" onclick="logout()">Logout</div>
         <div id="locationDisplay"></div>
     </div>
 
-    <!-- Profile Section -->
-    <div id="profileSection" class="container">
+    <!-- Student Profile -->
+    <div id="studentProfile" class="container" style="display: none;">
         <h2>Student Profile</h2>
         <div class="profile-card">
             <div class="profile-field">
-                <strong>Name:</strong> Anto Manuel
+                <strong>Name:</strong> John Student
             </div>
             <div class="profile-field">
-                <strong>Admission Number:</strong> SJC0000
+                <strong>ID:</strong> ST001
             </div>
             <div class="profile-field">
                 <strong>Course:</strong> B.Tech Computer Science
@@ -184,221 +138,389 @@
                 <strong>Year:</strong> Third Year
             </div>
             <div class="profile-field">
-                <strong>Blood Group:</strong> O-ve
+                <strong>Contact:</strong> +91 9876543210
+            </div>
+        </div>
+        <button class="button back-button" onclick="backToStudentDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Bus Pass Booking -->
+    <div id="busPassBooking" class="container" style="display: none;">
+        <h2>Book Bus Pass</h2>
+        <div class="form-group">
+            <label>Select Route</label>
+            <select id="routeSelect">
+                <option value="">Choose Route</option>
+                <option value="A">Route A - City Center</option>
+                <option value="B">Route B - West Campus</option>
+                <option value="C">Route C - East Campus</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Pass Duration</label>
+            <select id="durationSelect">
+                <option value="1">1 Month - ₹1000</option>
+                <option value="3">3 Months - ₹2700</option>
+                <option value="6">6 Months - ₹5000</option>
+            </select>
+        </div>
+        <button class="button" onclick="bookPass()">Book Pass</button>
+        <button class="button back-button" onclick="backToStudentDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Booked Pass View -->
+    <div id="bookedPass" class="container" style="display: none;">
+        <h2>Booked Pass Details</h2>
+        <div class="profile-card">
+            <div class="profile-field">
+                <strong>Pass ID:</strong> BP001
+            </div>
+            <div class="profile-field">
+                <strong>Route:</strong> Route A
+            </div>
+            <div class="profile-field">
+                <strong>Valid Till:</strong> 31-01-2025
+            </div>
+            <div class="profile-field">
+                <strong>Status:</strong> Active
+            </div>
+        </div>
+        <button class="button back-button" onclick="backToStudentDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Operator Dashboard -->
+    <div id="operatorDashboard" class="container" style="display: none;">
+        <h2>Operator Dashboard</h2>
+        <div class="menu-item" onclick="showOperatorProfile()">Operator Profile</div>
+        <div class="menu-item" onclick="showStudentList()">List of Students</div>
+        <div class="menu-item" onclick="showBusPassManagement()">Bus Pass Management</div>
+        <div class="menu-item logout" onclick="logout()">Logout</div>
+    </div>
+
+    <!-- Operator Profile -->
+    <div id="operatorProfile" class="container" style="display: none;">
+        <h2>Operator Profile</h2>
+        <div class="profile-card">
+            <div class="profile-field">
+                <strong>Name:</strong> John Operator
+            </div>
+            <div class="profile-field">
+                <strong>ID:</strong> OP123
+            </div>
+            <div class="profile-field">
+                <strong>Route:</strong> Route A
             </div>
             <div class="profile-field">
                 <strong>Contact:</strong> +91 9876543210
             </div>
-            <div class="profile-field">
-                <strong>Email:</strong> anto.manuel@example.com
-            </div>
         </div>
-        <button class="button back-button" onclick="showSection('studentDashboard')">Back to Dashboard</button>
+        <button class="button back-button" onclick="backToOperatorDashboard()">Back to Dashboard</button>
     </div>
 
-    <!-- Bus Pass Section -->
-    <div id="busPassSection" class="container">
-        <h2>Book Bus Pass</h2>
-        <table class="routes-table">
+    <!-- Student List -->
+    <div id="studentList" class="container" style="display: none;">
+        <h2>Student List</h2>
+        <table class="table">
             <thead>
                 <tr>
+                    <th>Name</th>
+                    <th>ID</th>
                     <th>Route</th>
-                    <th>Departure Time</th>
+                    <th>Pass Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Student</td>
+                    <td>ST001</td>
+                    <td>Route A</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Jane Student</td>
+                    <td>ST002</td>
+                    <td>Route B</td>
+                    <td>Pending</td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="button back-button" onclick="backToOperatorDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Bus Pass Management -->
+    <div id="busPassManagement" class="container" style="display: none;">
+        <h2>Bus Pass Management</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Pass ID</th>
+                    <th>Student Name</th>
+                    <th>Route</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>BP001</td>
+                    <td>John Student</td>
+                    <td>Route A</td>
+                    <td>Active</td>
+                    <td><button class="button" onclick="updatePass('BP001')">Update</button></td>
+                </tr>
+                <tr>
+                    <td>BP002</td>
+                    <td>Jane Student</td>
+                    <td>Route B</td>
+                    <td>Pending</td>
+                    <td><button class="button" onclick="updatePass('BP002')">Update</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="button back-button" onclick="backToOperatorDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="container" style="display: none;">
+        <h2>Admin Dashboard</h2>
+        <div class="menu-item" onclick="showAdminProfile()">Admin Profile</div>
+        <div class="menu-item" onclick="showManageOperators()">Manage Operators</div>
+        <div class="menu-item" onclick="showManageStudents()">Manage Students</div>
+        <div class="menu-item" onclick="showManageRoutes()">Manage Routes</div>
+        <div class="menu-item logout" onclick="logout()">Logout</div>
+    </div>
+
+    <!-- Admin Profile -->
+    <div id="adminProfile" class="container" style="display: none;">
+        <h2>Admin Profile</h2>
+        <div class="profile-card">
+            <div class="profile-field">
+                <strong>Name:</strong> Admin User
+            </div>
+            <div class="profile-field">
+                <strong>ID:</strong> AD001
+            </div>
+            <div class="profile-field">
+                <strong>Role:</strong> System Administrator
+            </div>
+            <div class="profile-field">
+                <strong>Contact:</strong> +91 9876543210
+            </div>
+        </div>
+        <button class="button back-button" onclick="backToAdminDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Manage Operators -->
+    <div id="manageOperators" class="container" style="display: none;">
+        <h2>Manage Operators</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Route</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Operator</td>
+                    <td>OP001</td>
+                    <td>Route A</td>
+                    <td>Active</td>
+                    <td><button class="button" onclick="editOperator('OP001')">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>Jane Operator</td>
+                    <td>OP002</td>
+                    <td>Route B</td>
+                    <td>Active</td>
+                    <td><button class="button" onclick="editOperator('OP002')">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="button back-button" onclick="backToAdminDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Manage Students -->
+    <div id="manageStudents" class="container" style="display: none;">
+        <h2>Manage Students</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Course</th>
+                    <th>Year</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Student</td>
+                    <td>ST001</td>
+                    <td>B.Tech CS</td>
+                    <td>3rd Year</td>
+                    <td><button class="button" onclick="editStudent('ST001')">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>Jane Student</td>
+                    <td>ST002</td>
+                    <td>B.Tech EC</td>
+                    <td>2nd Year</td>
+                    <td><button class="button" onclick="editStudent('ST002')">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="button back-button" onclick="backToAdminDashboard()">Back to Dashboard</button>
+    </div>
+
+    <!-- Manage Routes -->
+    <div id="manageRoutes" class="container" style="display: none;">
+        <h2>Manage Routes</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Route ID</th>
+                    <th>Description</th>
                     <th>Stops</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Route A</td>
-                    <td>8:00 AM</td>
-                    <td>Pala, Kuravilangad, Ettumanoor</td>
-                    <td><button class="button" onclick="showBookingForm('Route A', '8:00 AM', 'Pala, Kuravilangad, Ettumanoor')">Select</button></td>
+                    <td>R001</td>
+                    <td>City Center Route</td>
+                    <td>Stop1, Stop2, Stop3</td>
+                    <td><button class="button" onclick="editRoute('R001')">Edit</button></td>
                 </tr>
                 <tr>
-                    <td>Route B</td>
-                    <td>9:00 AM</td>
-                    <td>Kottayam, Kumarakom, Changanassery</td>
-                    <td><button class="button" onclick="showBookingForm('Route B', '9:00 AM', 'Kottayam, Kumarakom, Changanassery')">Select</button></td>
+                    <td>R002</td>
+                    <td>Campus Route</td>
+                    <td>Stop4, Stop5, Stop6</td>
+                    <td><button class="button" onclick="editRoute('R002')">Edit</button></td>
                 </tr>
-                <tr>
-                    <td>Route C</td>
-                    <td>7:30 AM</td>
-                    <td>Thodupuzha, Muttom, Kaduthuruthy</td>
-                    <td><button class="button" onclick="showBookingForm('Route C', '7:30 AM', 'Thodupuzha, Muttom, Kaduthuruthy')">Select</button></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div id="bookingForm" class="booking-form">
-            <h3>Complete Your Booking</h3>
-            <div class="form-group">
-                <label>Selected Route:</label>
-                <input type="text" id="selectedRoute" readonly>
-            </div>
-            <div class="form-group">
-                <label>Departure Time:</label>
-                <input type="text" id="departureTime" readonly>
-            </div>
-            <div class="form-group">
-                <label>Select Boarding Point:</label>
-                <select id="boardingPoint"></select>
-            </div>
-            <div class="form-group">
-                <label>Pass Duration:</label>
-                <select id="passDuration">
-                    <option value="1">1 Month - ₹1000</option>
-                    <option value="3">3 Months - ₹2700</option>
-                    <option value="6">6 Months - ₹5000</option>
-                </select>
-            </div>
-            <button class="button" onclick="confirmBooking()">Confirm Booking</button>
-            <button class="button cancel-button" onclick="cancelBooking()">Cancel</button>
-        </div>
-        <button class="button back-button" onclick="showSection('studentDashboard')">Back to Dashboard</button>
-    </div>
-
-    <!-- Operator Dashboard -->
-    <div id="operatorDashboard" class="container">
-        <h2>Operator Dashboard</h2>
-        <div class="dashboard-menu">
-            <div class="menu-item">Operator Profile</div>
-            <div class="menu-item">List of Students</div>
-            <div class="menu-item">Bus Pass Management</div>
-            <div class="menu-item">Emergency Alerts</div>
-            <div class="menu-item logout" onclick="logout()">Logout</div>
-        </div>
-    </div>
-
-    <!-- Admin Dashboard -->
-    <div id="adminDashboard" class="container">
-        <h2>Admin Dashboard</h2>
-        <div class="dashboard-menu">
-            <div class="menu-item">Manage Users</div>
-            <div class="menu-item">System Settings</div>
-            <div class="menu-item">View Reports</div>
-            <div class="menu-item logout" onclick="logout()">Logout</div>
-        </div>
-    </div>
-
-    <script>
-        // Show login section on page load
-        window.onload = function() {
-            checkLoginStatus();
-        };
-
-        // Check login status
-        function checkLoginStatus() {
-            const role = localStorage.getItem('role');
-            if (role) {
-                showSection(role + 'Dashboard');
-            } else {
-                showSection('loginSection');
-            }
+                <script>
+    // Login credentials
+    const users = {
+        student: {
+            username: 'student',
+            password: 'student123',
+            role: 'student'
+        },
+        operator: {
+            username: 'operator',
+            password: 'operator123',
+            role: 'operator'
+        },
+        admin: {
+            username: 'admin',
+            password: 'admin123',
+            role: 'admin'
         }
+    };
 
-        // Show/hide sections
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.container').forEach(container => {
-                container.style.display = 'none';
-            });
-            // Show requested section
-            document.getElementById(sectionId).style.display = 'block';
-        }
-
-        // Login form handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === 'student' && password === 'student123') {
-                localStorage.setItem('role', 'student');
-                showSection('studentDashboard');
-            } else if (username === 'operator' && password === 'operator123') {
-                localStorage.setItem('role', 'operator');
-                showSection('operatorDashboard');
-            } else if (username === 'admin' && password === 'admin123') {
-                localStorage.setItem('role', 'admin');
-                showSection('adminDashboard');
-            } else {
-                document.getElementById('errorMessage').textContent = 'Invalid username or password';
+    // Login form handling
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        const user = Object.values(users).find(u => u.username === username && u.password === password);
+        
+        if (user) {
+            switch(user.role) {
+                case 'student':
+                    showSection('studentDashboard');
+                    break;
+                case 'operator':
+                    showSection('operatorDashboard');
+                    break;
+                case 'admin':
+                    showSection('adminDashboard');
+                    break;
             }
+        } else {
+            document.getElementById('loginError').textContent = 'Invalid username or password';
+        }
+    });
+
+    // Show/Hide functions
+    function showSection(sectionId) {
+        const sections = [
+            'loginSection',
+            'studentDashboard', 'studentProfile', 'busPassBooking', 'bookedPass',
+            'operatorDashboard', 'operatorProfile', 'studentList', 'busPassManagement',
+            'adminDashboard', 'adminProfile', 'manageOperators', 'manageStudents', 'manageRoutes'
+        ];
+        sections.forEach(section => {
+            document.getElementById(section).style.display = 'none';
         });
+        document.getElementById(sectionId).style.display = 'block';
+    }
 
-        // Logout function
-        function logout() {
-            localStorage.removeItem('role');
-            showSection('loginSection');
-        }
+    // Student Dashboard Functions
+    function showStudentProfile() { showSection('studentProfile'); }
+    function showBusPassBooking() { showSection('busPassBooking'); }
+    function showBookedPass() { showSection('bookedPass'); }
+    function backToStudentDashboard() { showSection('studentDashboard'); }
 
-        // Live location function
-        function showLiveLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const locationDisplay = document.getElementById('locationDisplay');
-                    locationDisplay.innerHTML = `
-                        <div class="profile-card">
-                            <strong>Your Current Location:</strong><br>
-                            Latitude: ${position.coords.latitude}<br>
-                            Longitude: ${position.coords.longitude}
-                        </div>
-                    `;
-                    locationDisplay.style.display = 'block';
-                });
-            } else {
-                alert('Geolocation is not supported by this browser.');
-            }
-        }
+    // Operator Dashboard Functions
+    function showOperatorProfile() { showSection('operatorProfile'); }
+    function showStudentList() { showSection('studentList'); }
+    function showBusPassManagement() { showSection('busPassManagement'); }
+    function backToOperatorDashboard() { showSection('operatorDashboard'); }
 
-        // Bus pass booking functions
-        function showBookingForm(route, time, stops) {
-            const bookingForm = document.getElementById('bookingForm');
-            bookingForm.style.display = 'block';
-            
-            document.getElementById('selectedRoute').value = route;
-            document.getElementById('departureTime').value = time;
-            
-            // Populate boarding points
-            const boardingPoint = document.getElementById('boardingPoint');
-            boardingPoint.innerHTML = '';
-            stops.split(', ').forEach(stop => {
-                const option = document.createElement('option');
-                option.value = stop;
-                option.textContent = stop;
-                boardingPoint.appendChild(option);
-            });
-            
-            bookingForm.scrollIntoView({ behavior: 'smooth' });
-        }
+    // Admin Dashboard Functions
+    function showAdminProfile() { showSection('adminProfile'); }
+    function showManageOperators() { showSection('manageOperators'); }
+    function showManageStudents() { showSection('manageStudents'); }
+    function showManageRoutes() { showSection('manageRoutes'); }
+    function backToAdminDashboard() { showSection('adminDashboard'); }
 
-        function confirmBooking() {
-            const booking = {
-                route: document.getElementById('selectedRoute').value,
-                departureTime: document.getElementById('departureTime').value,
-                boardingPoint: document.getElementById('boardingPoint').value,
-                duration: document.getElementById('passDuration').value,
-                bookingDate: new Date().toLocaleDateString()
-            };
-            
-            localStorage.setItem('busPass', JSON.stringify(booking));
-            alert('Bus pass booked successfully!');
+    // Common Functions
+    function logout() {
+        showSection('loginSection');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('loginError').textContent = '';
+    }
+
+    function showLiveLocation() {
+        document.getElementById('locationDisplay').innerHTML = 'Fetching live location...';
+        setTimeout(() => {
+            document.getElementById('locationDisplay').innerHTML = 'Current Location: College Campus';
+        }, 1000);
+    }
+
+    function bookPass() {
+        const route = document.getElementById('routeSelect').value;
+        const duration = document.getElementById('durationSelect').value;
+        if (route && duration) {
+            alert('Pass booked successfully!');
             showSection('studentDashboard');
+        } else {
+            alert('Please select both route and duration');
         }
+    }
 
-        function cancelBooking() {
-            document.getElementById('bookingForm').style.display = 'none';
-        }
+    function updatePass(passId) {
+        alert('Updating pass: ' + passId);
+    }
 
-        function viewBookedPass() {
-            const booking = JSON.parse(localStorage.getItem('busPass'));
-            if (booking) {
-                alert(Current Active Pass:\nRoute: ${booking.route}\nBoarding Point: ${booking.boardingPoint}\nDuration: ${booking.duration} month(s)\nBooked on: ${booking.bookingDate});
-            } else {
-                alert('No active bus pass found.');
-            }
-        }
-    </script>
-</body>
-</html>
+    function editOperator(operatorId) {
+        alert('Editing operator: ' + operatorId);
+    }
+
+    function editStudent(studentId) {
+        alert('Editing student: ' + studentId);
+    }
+
+    function editRoute(routeId) {
+        alert('Editing route: ' + routeId);
+    }
+
+    // Show login section by default
+    showSection('loginSection');
+</script>
