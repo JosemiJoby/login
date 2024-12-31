@@ -90,6 +90,19 @@
             border-left: 4px solid #007bff;
             background: white;
         }
+        .booking-form {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .route-details {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -114,11 +127,9 @@
     <div id="studentDashboard" class="container" style="display: none;">
         <h2>Student Dashboard</h2>
         <div class="menu-item" onclick="showStudentProfile()">My Profile</div>
-        <div class="menu-item" onclick="showBusPassBooking()">Book Bus Pass</div>
-        <div class="menu-item" onclick="showLiveLocation()">Live Location</div>
+        <div class="menu-item" onclick="showBusRoutes()">Book Bus Pass</div>
         <div class="menu-item" onclick="showBookedPass()">View Booked Pass</div>
         <div class="menu-item logout" onclick="logout()">Logout</div>
-        <div id="locationDisplay"></div>
     </div>
 
     <!-- Student Profile -->
@@ -126,7 +137,7 @@
         <h2>Student Profile</h2>
         <div class="profile-card">
             <div class="profile-field">
-                <strong>Name:</strong> John Student
+                <strong>Name:</strong> John Mathew
             </div>
             <div class="profile-field">
                 <strong>ID:</strong> ST001
@@ -138,48 +149,86 @@
                 <strong>Year:</strong> Third Year
             </div>
             <div class="profile-field">
+                <strong>Blood-Group:</strong> o+ve
+            </div>
+            </div>
+            <div class="profile-field">
                 <strong>Contact:</strong> +91 9876543210
             </div>
         </div>
         <button class="button back-button" onclick="backToStudentDashboard()">Back to Dashboard</button>
     </div>
 
-    <!-- Bus Pass Booking -->
-    <div id="busPassBooking" class="container" style="display: none;">
-        <h2>Book Bus Pass</h2>
-        <div class="form-group">
-            <label>Select Route</label>
-            <select id="routeSelect">
-                <option value="">Choose Route</option>
-                <option value="A">Route A - City Center</option>
-                <option value="B">Route B - West Campus</option>
-                <option value="C">Route C - East Campus</option>
-            </select>
+    <!-- Bus Routes Section -->
+    <div id="busRoutes" class="container" style="display: none;">
+        <h2>Available Bus Routes</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Route</th>
+                    <th>Departure Time</th>
+                    <th>Stops</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Route A</td>
+                    <td>8:00 AM</td>
+                    <td>Pala, Kuravilangad, Ettumanoor</td>
+                    <td><button class="button" onclick="showBookingForm('Route A', '8:00 AM', 'Pala, Kuravilangad, Ettumanoor')">Select</button></td>
+                </tr>
+                <tr>
+                    <td>Route B</td>
+                    <td>9:00 AM</td>
+                    <td>Kottayam, Kumarakom, Changanassery</td>
+                    <td><button class="button" onclick="showBookingForm('Route B', '9:00 AM', 'Kottayam, Kumarakom, Changanassery')">Select</button></td>
+                </tr>
+                <tr>
+                    <td>Route C</td>
+                    <td>7:30 AM</td>
+                    <td>Thodupuzha, Muttom, Kaduthuruthy</td>
+                    <td><button class="button" onclick="showBookingForm('Route C', '7:30 AM', 'Thodupuzha, Muttom, Kaduthuruthy')">Select</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="bookingForm" class="booking-form">
+            <h3>Book Bus Pass</h3>
+            <div class="route-details">
+                <p><strong>Selected Route:</strong> <span id="selectedRoute"></span></p>
+                <p><strong>Departure Time:</strong> <span id="selectedTime"></span></p>
+                <p><strong>Stops:</strong> <span id="selectedStops"></span></p>
+            </div>
+            <div class="form-group">
+                <label>Pass Duration</label>
+                <select id="durationSelect">
+                    <option value="1">1 Month - ₹1000</option>
+                    <option value="3">3 Months - ₹2700</option>
+                    <option value="6">6 Months - ₹5000</option>
+                </select>
+            </div>
+            <button class="button" onclick="confirmBooking()">Confirm Booking</button>
         </div>
-        <div class="form-group">
-            <label>Pass Duration</label>
-            <select id="durationSelect">
-                <option value="1">1 Month - ₹1000</option>
-                <option value="3">3 Months - ₹2700</option>
-                <option value="6">6 Months - ₹5000</option>
-            </select>
-        </div>
-        <button class="button" onclick="bookPass()">Book Pass</button>
+
         <button class="button back-button" onclick="backToStudentDashboard()">Back to Dashboard</button>
     </div>
 
     <!-- Booked Pass View -->
     <div id="bookedPass" class="container" style="display: none;">
-        <h2>Booked Pass Details</h2>
+        <h2>Your Bus Pass</h2>
         <div class="profile-card">
             <div class="profile-field">
                 <strong>Pass ID:</strong> BP001
             </div>
             <div class="profile-field">
-                <strong>Route:</strong> Route A
+                <strong>Route:</strong> <span id="passRoute"></span>
             </div>
             <div class="profile-field">
-                <strong>Valid Till:</strong> 31-01-2025
+                <strong>Departure Time:</strong> <span id="passDeparture"></span>
+            </div>
+            <div class="profile-field">
+                <strong>Valid Till:</strong> <span id="passValidity"></span>
             </div>
             <div class="profile-field">
                 <strong>Status:</strong> Active
@@ -342,7 +391,6 @@
         </table>
         <button class="button back-button" onclick="backToAdminDashboard()">Back to Dashboard</button>
     </div>
-
     <!-- Manage Students -->
     <div id="manageStudents" class="container" style="display: none;">
         <h2>Manage Students</h2>
@@ -352,7 +400,7 @@
                     <th>Name</th>
                     <th>ID</th>
                     <th>Course</th>
-                    <th>Year</th>
+                    <th>Pass Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -360,15 +408,15 @@
                 <tr>
                     <td>John Student</td>
                     <td>ST001</td>
-                    <td>B.Tech CS</td>
-                    <td>3rd Year</td>
+                    <td>B.Tech Computer Science</td>
+                    <td>Active</td>
                     <td><button class="button" onclick="editStudent('ST001')">Edit</button></td>
                 </tr>
                 <tr>
                     <td>Jane Student</td>
                     <td>ST002</td>
-                    <td>B.Tech EC</td>
-                    <td>2nd Year</td>
+                    <td>B.Tech Electronics</td>
+                    <td>Pending</td>
                     <td><button class="button" onclick="editStudent('ST002')">Edit</button></td>
                 </tr>
             </tbody>
@@ -383,144 +431,154 @@
             <thead>
                 <tr>
                     <th>Route ID</th>
-                    <th>Description</th>
+                    <th>Name</th>
                     <th>Stops</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>R001</td>
-                    <td>City Center Route</td>
-                    <td>Stop1, Stop2, Stop3</td>
+                    <td>Route A</td>
+                    <td>Pala, Kuravilangad, Ettumanoor</td>
+                    <td>Active</td>
                     <td><button class="button" onclick="editRoute('R001')">Edit</button></td>
                 </tr>
                 <tr>
                     <td>R002</td>
-                    <td>Campus Route</td>
-                    <td>Stop4, Stop5, Stop6</td>
+                    <td>Route B</td>
+                    <td>Kottayam, Kumarakom, Changanassery</td>
+                    <td>Active</td>
                     <td><button class="button" onclick="editRoute('R002')">Edit</button></td>
                 </tr>
-                <script>
-    // Login credentials
-    const users = {
-        student: {
-            username: 'student',
-            password: 'student123',
-            role: 'student'
-        },
-        operator: {
-            username: 'operator',
-            password: 'operator123',
-            role: 'operator'
-        },
-        admin: {
-            username: 'admin',
-            password: 'admin123',
-            role: 'admin'
-        }
-    };
+            </tbody>
+        </table>
+        <button class="button back-button" onclick="backToAdminDashboard()">Back to Dashboard</button>
+    </div>
 
-    // Login form handling
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        const user = Object.values(users).find(u => u.username === username && u.password === password);
-        
-        if (user) {
-            switch(user.role) {
-                case 'student':
-                    showSection('studentDashboard');
-                    break;
-                case 'operator':
-                    showSection('operatorDashboard');
-                    break;
-                case 'admin':
-                    showSection('adminDashboard');
-                    break;
+    <script>
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple login logic (for demonstration)
+            if (username === 'student' && password === 'student123') {
+                showSection('studentDashboard');
+            } else if (username === 'operator' && password === 'operator123') {
+                showSection('operatorDashboard');
+            } else if (username === 'admin' && password === 'admin123') {
+                showSection('adminDashboard');
+            } else {
+                document.getElementById('loginError').textContent = 'Invalid credentials';
             }
-        } else {
-            document.getElementById('loginError').textContent = 'Invalid username or password';
-        }
-    });
-
-    // Show/Hide functions
-    function showSection(sectionId) {
-        const sections = [
-            'loginSection',
-            'studentDashboard', 'studentProfile', 'busPassBooking', 'bookedPass',
-            'operatorDashboard', 'operatorProfile', 'studentList', 'busPassManagement',
-            'adminDashboard', 'adminProfile', 'manageOperators', 'manageStudents', 'manageRoutes'
-        ];
-        sections.forEach(section => {
-            document.getElementById(section).style.display = 'none';
         });
-        document.getElementById(sectionId).style.display = 'block';
-    }
 
-    // Student Dashboard Functions
-    function showStudentProfile() { showSection('studentProfile'); }
-    function showBusPassBooking() { showSection('busPassBooking'); }
-    function showBookedPass() { showSection('bookedPass'); }
-    function backToStudentDashboard() { showSection('studentDashboard'); }
-
-    // Operator Dashboard Functions
-    function showOperatorProfile() { showSection('operatorProfile'); }
-    function showStudentList() { showSection('studentList'); }
-    function showBusPassManagement() { showSection('busPassManagement'); }
-    function backToOperatorDashboard() { showSection('operatorDashboard'); }
-
-    // Admin Dashboard Functions
-    function showAdminProfile() { showSection('adminProfile'); }
-    function showManageOperators() { showSection('manageOperators'); }
-    function showManageStudents() { showSection('manageStudents'); }
-    function showManageRoutes() { showSection('manageRoutes'); }
-    function backToAdminDashboard() { showSection('adminDashboard'); }
-
-    // Common Functions
-    function logout() {
-        showSection('loginSection');
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('loginError').textContent = '';
-    }
-
-    function showLiveLocation() {
-        document.getElementById('locationDisplay').innerHTML = 'Fetching live location...';
-        setTimeout(() => {
-            document.getElementById('locationDisplay').innerHTML = 'Current Location: College Campus';
-        }, 1000);
-    }
-
-    function bookPass() {
-        const route = document.getElementById('routeSelect').value;
-        const duration = document.getElementById('durationSelect').value;
-        if (route && duration) {
-            alert('Pass booked successfully!');
-            showSection('studentDashboard');
-        } else {
-            alert('Please select both route and duration');
+        // Utility functions
+        function showSection(sectionId) {
+            // Hide all containers
+            document.querySelectorAll('.container').forEach(container => {
+                container.style.display = 'none';
+            });
+            // Show requested section
+            document.getElementById(sectionId).style.display = 'block';
         }
-    }
 
-    function updatePass(passId) {
-        alert('Updating pass: ' + passId);
-    }
+        // Student functions
+        function showStudentProfile() {
+            showSection('studentProfile');
+        }
 
-    function editOperator(operatorId) {
-        alert('Editing operator: ' + operatorId);
-    }
+        function showBusRoutes() {
+            showSection('busRoutes');
+        }
 
-    function editStudent(studentId) {
-        alert('Editing student: ' + studentId);
-    }
+        function showBookedPass() {
+            // Set some demo data
+            document.getElementById('passRoute').textContent = 'Route A';
+            document.getElementById('passDeparture').textContent = '8:00 AM';
+            document.getElementById('passValidity').textContent = '31 Dec 2025';
+            showSection('bookedPass');
+        }
 
-    function editRoute(routeId) {
-        alert('Editing route: ' + routeId);
-    }
+        function showBookingForm(route, time, stops) {
+            document.getElementById('selectedRoute').textContent = route;
+            document.getElementById('selectedTime').textContent = time;
+            document.getElementById('selectedStops').textContent = stops;
+            document.getElementById('bookingForm').style.display = 'block';
+        }
 
-    // Show login section by default
-    showSection('loginSection');
-</script>
+        function confirmBooking() {
+            alert('Booking confirmed successfully!');
+            showBookedPass();
+        }
+
+        function backToStudentDashboard() {
+            showSection('studentDashboard');
+        }
+
+        // Operator functions
+        function showOperatorProfile() {
+            showSection('operatorProfile');
+        }
+
+        function showStudentList() {
+            showSection('studentList');
+        }
+
+        function showBusPassManagement() {
+            showSection('busPassManagement');
+        }
+
+        function backToOperatorDashboard() {
+            showSection('operatorDashboard');
+        }
+
+        function updatePass(passId) {
+            alert('Pass ' + passId + ' updated successfully!');
+        }
+
+        // Admin functions
+        function showAdminProfile() {
+            showSection('adminProfile');
+        }
+
+        function showManageOperators() {
+            showSection('manageOperators');
+        }
+
+        function showManageStudents() {
+            showSection('manageStudents');
+        }
+
+        function showManageRoutes() {
+            showSection('manageRoutes');
+        }
+
+        function backToAdminDashboard() {
+            showSection('adminDashboard');
+        }
+
+        function editOperator(operatorId) {
+            alert('Editing operator: ' + operatorId);
+        }
+
+        function editStudent(studentId) {
+            alert('Editing student: ' + studentId);
+        }
+
+        function editRoute(routeId) {
+            alert('Editing route: ' + routeId);
+        }
+
+        function logout() {
+            showSection('loginSection');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').textContent = '';
+        }
+    </script>
+</body>
+</html>
